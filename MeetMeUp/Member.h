@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface Member : NSObject
 
@@ -17,8 +18,8 @@
 @property (nonatomic, strong) NSString *country;
 @property (nonatomic, strong) NSURL *photoURL;
 
-
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
-
+- (void)getImageWithURL:(NSURL *)url andCompletionHandler:(void(^)(UIImage *image))completion;
++ (void)getMemberInformationWithID:(NSString *)memberId andCompletionHandler:(void(^)(Member *memberInfo))completion;
 
 @end

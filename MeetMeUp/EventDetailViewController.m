@@ -31,14 +31,11 @@
     self.countLabel.text = self.event.RSVPCount;
     self.hostedByLabel.text = self.event.hostedBy;
     self.descriptionTextview.text = self.event.eventDescription;
-
-
     self.navigationItem.rightBarButtonItem.title = @"MEHH";
-
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
     if ([[segue identifier]isEqualToString:@"webSegue"]) {
         WebViewController *webVC = [segue destinationViewController];
         webVC.eventURL = self.event.eventURL;

@@ -11,4 +11,6 @@
 @class Event;
 @interface EventDetailViewController : UIViewController
 @property (nonatomic, strong) Event *event;
+
+
 @end

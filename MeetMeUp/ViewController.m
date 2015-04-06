@@ -29,23 +29,12 @@
 
 - (void)performSearchWithKeyword:(NSString *)keyword
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.meetup.com/2/open_events.json?zip=60604&text=%@&time=,1w&key=4b6a576833454113112e241936657e47",keyword]];
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                               
-                               NSArray *jsonArray = [[NSJSONSerialization JSONObjectWithData:data
-                                                                                     options:NSJSONReadingAllowFragments
-                                                                                       error:nil] objectForKey:@"results"];
-                               
-                               
-                               self.dataArray = [Event eventsFromArray:jsonArray];
-                               [self.tableView reloadData];
-                           }];
+    // refactored to class method
 
+    [Event getDataFromPerformSearchKeyWord:keyword withCompletionHandler:^(NSArray *events) {
+        self.dataArray = events;
+        [self.tableView reloadData];
+    }];
 }
 
 #pragma mark - Tableview Methods
@@ -65,21 +54,13 @@
     cell.detailTextLabel.text = e.address;
     if (e.photoURL)
     {
-        NSURLRequest *imageReq = [NSURLRequest requestWithURL:e.photoURL];
-        
-        [NSURLConnection sendAsynchronousRequest:imageReq queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-           dispatch_async(dispatch_get_main_queue(), ^{
-               if (!connectionError) {
-                   [cell.imageView setImage:[UIImage imageWithData:data]];
-                   [cell layoutSubviews];
-               }
-           });
-
-
+        // refactored to instance method
+        [e getImageWithURL:e.photoURL withCompletion:^(UIImage *image) {
+            cell.imageView.image = image;
+            [cell layoutSubviews];
         }];
-        
-        
-    }else
+    }
+    else
     {
        [cell.imageView setImage:[UIImage imageNamed:@"logo"]];
     }
